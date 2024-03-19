@@ -1,5 +1,29 @@
 <p>products works!</p>
-
-<h1>Products</h1>
-<button mat-button (click)="navigateToProductDetail()">View Product Detail</button>
-<button mat-button (click)="navigateToFormProduct()">Go to Form Product</button>
+<mat-card *ngFor="let product of products">
+    <div class="details">
+        <div class="info">
+            <div id="nyd">
+                <mat-card-subtitle>
+                    {{product.id}} - {{product.title}}
+                </mat-card-subtitle>
+                <mat-card-content id="desc">
+                   Description:  {{product.description}}
+                </mat-card-content>
+            </div>
+            <div id="pyc">
+                <mat-card-content>
+                    Category: {{product.category}}
+                </mat-card-content>
+                <mat-card-content>
+                    $ {{product.price}}
+                </mat-card-content>
+            </div>
+        </div>
+        <img [src]="product.image" mat-card-image>
+    </div>
+    <mat-card-actions>
+        <button mat-button (click)="showUpdateForm(product)">Actualizar</button>
+        <button mat-button (click)="deleteProduct(product)">Eliminar</button>
+        <button mat-button (click)="navigateToProductDetail()">View Product Detail</button>
+        <button mat-button (click)="navigateToFormProduct()">Go to Form Product</button>        
+    </mat-card-actions>

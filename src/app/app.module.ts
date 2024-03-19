@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductsComponent } from './components/products/products.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { FormProductComponent } from './components/form-product/form-product.component';
+
 @NgModule({
   declarations: [
     AppComponent,

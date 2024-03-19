@@ -1,0 +1,21 @@
+main{
+    width: 100%;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: center;
+}
+
+mat-toolbar, div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media(max-width: 460px) {
+
+    mat-toolbar, div{
+        display: flex;
+        flex-direction: column;
+        min-height: 15vh ;
+    }   
+
+}
