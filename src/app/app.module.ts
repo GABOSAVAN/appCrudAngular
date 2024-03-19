@@ -9,6 +9,8 @@ import { ProductsComponent } from './components/products/products.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { FormProductComponent } from './components/form-product/form-product.component';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MaterialModule, 
     HttpClientModule,
-    FormsModule   
+    FormsModule,
+    ReactiveFormsModule   
   ],
   providers: [],
   bootstrap: [AppComponent]
