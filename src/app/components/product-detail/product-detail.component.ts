@@ -30,10 +30,6 @@ export class ProductDetailComponent implements OnInit {
    }
 
   navigateToProducts() {
-    this.router.navigate(['/products']);
-  }
-
-  navigateToFormProduct() {
-    this.router.navigate(['/form-product']);
+    this.productsService.navigateToProducts();
   }
 }

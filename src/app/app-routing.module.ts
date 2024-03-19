@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'products', component: ProductsComponent },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'form-product', component: FormProductComponent },
+  { path: 'form-product/:id', component: FormProductComponent },
   { path: '', component: ProductsComponent },
   { path: '**', redirectTo: '/products', pathMatch: 'full' }
 ];

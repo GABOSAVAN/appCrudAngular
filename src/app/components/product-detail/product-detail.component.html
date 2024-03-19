@@ -1,7 +1,8 @@
-<p>product-detail works!</p>
+<button mat-button (click)="navigateToProducts()">Volver</button>
 
-
-<mat-card class="example-card">
+<div class="container">
+ 
+  <mat-card class="example-card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>{{product?.title}}</mat-card-title>
@@ -15,13 +16,12 @@
       <h3>{{product?.price | currency}}</h3>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
+      <button mat-button id="actualizar"  *ngIf="product && product.id" [routerLink]="['/form-product', product.id]">Actualizar</button>
     </mat-card-actions>
   </mat-card>
   
+</div>
 
 
-<h1>Product Detail</h1>
-<button mat-button (click)="navigateToProducts()">Back to Products</button>
-<button mat-button (click)="navigateToFormProduct()">Go to Form Product</button>
+
+

@@ -13,44 +13,37 @@ import { Router } from '@angular/router';
 export class ProductsComponent implements OnInit {
 
   products: Product[] = []; // Lista de productos obtenidos del localStorage
-  showForm = false; // Bandera para mostrar/ocultar el formulario de actualización
   productsSubscription!: Subscription;
-
-
+  selectedProduct: Product | null = null;
   constructor(private productsService: ProductsService,
               private router: Router) { }
 
-              ngOnInit() {
-                this.productsService.loadsProducts();
-                this.products = this.productsService.getLocalProducts();
-                this.productsSubscription = this.productsService.getProductsUpdatedListener()
-                  .subscribe((updatedProducts: Product[]) => {
-                    this.products = updatedProducts;
-                  });
-            }
-            
-            ngOnDestroy() {
-              this.productsSubscription.unsubscribe();
-            }
-              
-              showUpdateForm(product: Product) {
-                this.productsService.showUpdateForm(product);
-              }
-            
-              deleteProduct(productToDelete: Product) {
-                this.productsService.deleteProduct(productToDelete);
-                this.products = this.productsService.getLocalProducts();
-            }
-            
-            navigateToProductDetail() {
-              this.router.navigate(['/product-detail']);
-            }
-            
-            navigateToFormProduct() {
-              this.router.navigate(['/form-product']);
-            }
+  ngOnInit() {
+    console.log("products desde el componente",this.products)
+    this.productsService.loadsProducts();
+    this.products = this.productsService.getLocalProducts();
+    this.productsSubscription = this.productsService.getProductsUpdatedListener()
+      .subscribe((updatedProducts: Product[]) => {
+        this.products = updatedProducts;
+      });
+  }
+  
+  ngOnDestroy() {
+    this.productsSubscription.unsubscribe();
+  }
 
-            navegate(id: number): void {
-              this.router.navigate(['/products', id]);
-            }
+  deleteProduct(productToDelete: Product) {
+    this.productsService.deleteProduct(productToDelete);
+    this.products = this.productsService.getLocalProducts();
+  }  
+  
+  navigateToFormProduct() {
+    this.router.navigate(['/form-product']);
+  }  navegate(id: number): void {
+    this.router.navigate(['/products', id]);
+  }
+
+  togglehide(product: Product){    
+    this.selectedProduct = this.selectedProduct === product ? null : product;
+  }
 }

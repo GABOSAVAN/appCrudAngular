@@ -20,3 +20,13 @@ mat-card-actions{
     box-shadow: 3px 3px 5px black;
 }
 
+@media(max-width: 550px) {
+
+    mat-card-actions{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin: auto;
+        box-shadow: 3px 3px 5px black;
+    }
+}
