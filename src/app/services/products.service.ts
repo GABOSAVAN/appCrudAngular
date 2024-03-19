@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/product';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -44,6 +45,14 @@ export class ProductsService {
   getLocalProducts(): Product[] {
     const productsJson = localStorage.getItem(this.localStorageKey);
     return productsJson ? JSON.parse(productsJson) : [];
+  };
+
+  getProductById(productId: number): Observable<Product | null> {
+    console.log("que llega??????   ",typeof productId)
+    const productsStr = localStorage.getItem('products');
+    const products: Product[] = productsStr ? JSON.parse(productsStr) : [];
+    const product = products.find(item => item.id == productId);
+    return of(product || null);
   };
 
   saveLocalProducts() {

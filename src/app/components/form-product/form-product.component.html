@@ -1,5 +1,36 @@
 <p>form-product works!</p>
 
+<div class="container">
+    <mat-form-field>
+        <mat-label>Nombre Producto</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Precio</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Foto Url</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Categoria</mat-label>
+        <mat-select>
+            <mat-option value="one">First option</mat-option>
+            <mat-option value="two">Second option</mat-option>
+            <mat-option value="three">thirst option</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Descripcion</mat-label>
+        <textarea matInput></textarea>
+    </mat-form-field>
+    <mat-card-actions>
+        <button mat-button>CANCEL</button>
+        <button mat-button>SAVE</button>
+      </mat-card-actions>
+</div>
+
 <h1>Form Product</h1>
 <button mat-button (click)="navigateToProducts()">Back to Products</button>
 <button mat-button (click)="navigateToProductDetail()">View Product Detail</button>
