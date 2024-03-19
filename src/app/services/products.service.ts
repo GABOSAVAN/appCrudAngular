@@ -71,6 +71,7 @@ export class ProductsService {
         this.productsLocal[index] = { ...product };
         localStorage.setItem('products', JSON.stringify(this.productsLocal));
         this.products = this.productsLocal;
+        alert(`${product.title} ha sido actualizado`);
         console.log("products desde el servicio save 1",this.products)
       }
     } else {
@@ -78,6 +79,7 @@ export class ProductsService {
       this.productsLocal.push({ ...product });
       localStorage.setItem('products', JSON.stringify(this.productsLocal));
       this.products = this.productsLocal;
+      alert('Producto guardado exitosamente');
       console.log("products desde el servicio save 2",this.products)
     }
   }

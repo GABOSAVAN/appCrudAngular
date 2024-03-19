@@ -3,11 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/models/product';
 import { MaterialModule } from'src/app/material';
 import { ProductsService } from 'src/app/services/products.service';
+import { transformacionAnimacion } from '../../animations/animations';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css']
+  styleUrls: ['./product-detail.component.css'],
+  animations: [transformacionAnimacion]
 })
 export class ProductDetailComponent implements OnInit {
 

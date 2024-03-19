@@ -4,11 +4,13 @@ import { Product } from '../../models/product';
 import { MaterialModule } from '../../material';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { fadeInOut, transformacionAnimacion } from '../../animations/animations';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css']
+  styleUrls: ['./products.component.css'],
+  animations: [fadeInOut, transformacionAnimacion]
 })
 export class ProductsComponent implements OnInit {
 

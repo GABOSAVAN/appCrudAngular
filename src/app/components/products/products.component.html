@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container" [@fadeInOut]>
 
-<mat-card *ngFor="let product of products" (click)="togglehide(product)">
+<mat-card *ngFor="let product of products" (click)="togglehide(product)" [@transformacionAnimacion]>
     <div class="details">
         <div class="info">
             <div id="nyd">

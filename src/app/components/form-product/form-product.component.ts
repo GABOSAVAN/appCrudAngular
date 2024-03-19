@@ -3,12 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
 import { Product, Category } from '../../models/product';
 import { Observable } from 'rxjs';
-
+import { transformacionAnimacion } from '../../animations/animations';
 
 @Component({
   selector: 'app-form-product',
   templateUrl: './form-product.component.html',
-  styleUrls: ['./form-product.component.css']
+  styleUrls: ['./form-product.component.css'],
+  animations: [transformacionAnimacion]
 })
 export class FormProductComponent implements OnInit {
 

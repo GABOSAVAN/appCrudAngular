@@ -1,5 +1,5 @@
 <button mat-button (click)="navigateToProducts()">Volver</button>
-<div class="container">
+<div class="container" [@transformacionAnimacion]>
     <mat-form-field>
         <mat-label>Nombre Producto</mat-label>
         <input matInput [(ngModel)]="product.title">
@@ -28,6 +28,3 @@
         <button mat-button (click)="saveProduct()">SAVE</button>
       </mat-card-actions>
 </div>
-
-
-
