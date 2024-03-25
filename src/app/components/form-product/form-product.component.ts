@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
 import { Product, Category } from '../../models/product';
-import { Observable } from 'rxjs';
 import { transformacionAnimacion } from '../../animations/animations';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { requiredValidator, numberValidator } from '../../validators/validators';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar Validators y FormBuilder
 
 @Component({
   selector: 'app-form-product',
@@ -17,25 +15,27 @@ export class FormProductComponent implements OnInit {
 
   product: Product = {};
   categories: Category[] = Object.values(Category);
-  productForm: FormGroup;
+  productForm: FormGroup; // Definir la variable productForm como FormGroup
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private productService: ProductsService,
-              private formBuilder: FormBuilder
-              ) {
-                this.productForm = this.formBuilder.group({ // Crear el FormGroup con FormBuilder
-                  title: ['', [Validators.required]], // Campo title requerido
-                  description: ['', [Validators.required]], // Campo description requerido
-                  category: ['', [Validators.required]], // Campo category requerido
-                  price: ['', [Validators.required, numberValidator]], // Campo price requerido y número
-                  image: [''] // Campo image no requerido
-                });
-               }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductsService,
+    private formBuilder: FormBuilder // Agregar FormBuilder al constructor
+  ) {
+    this.productForm = this.formBuilder.group({
+      id: [], // Agregar campo id al FormGroup, no es requerido
+      title: ['', [Validators.required]], // Campo title requerido
+      description: ['', [Validators.required]], // Campo description requerido
+      category: ['', [Validators.required]], // Campo category requerido
+      price: ['', [Validators.required, Validators.pattern(/^-?\d*(\.\d+)?$/)]], // Campo price requerido y debe ser un número
+      image: [''] // Campo image no requerido
+    });
+  }
 
   ngOnInit(): void {
-     // Obtener el producto si se está editando
-     this.route.params.subscribe(params => {
+    // Obtener el producto si se está editando
+    this.route.params.subscribe(params => {
       const productId = +params['id'];
       if (productId) {
         this.productService.getProductById(productId).subscribe((data: Product | null) => {
@@ -61,7 +61,7 @@ export class FormProductComponent implements OnInit {
   }
 
   clearForm(): void {
-    this.product = {};
+    this.productForm.reset(); // Resetear el formulario utilizando reset()
   }
 
   cancel(): void {

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/product';
 import { Observable, Subject, of } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-//import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,57 +11,45 @@ export class ProductsService {
 
   private url = 'https://fakestoreapi.com/products';
   private localStorageKey = 'products';
-  products: Product[] = [];
-  productsLocal: Product[] = [];
-  showForm = false; // Bandera para mostrar/ocultar el formulario de actualización
-  selectedProduct: Product | null = null; // Producto seleccionado para actualizar
-  private productsUpdated = new Subject<Product[]>(); // Subject para notificar actualizaciones
+  private productsLocal: Product[] = [];
+  private productsUpdated = new Subject<Product[]>(); 
+  dataLoaded: boolean = false; // Bandera para controlar si los datos ya se han cargado
 
-  constructor(private http: HttpClient,
-              private route: ActivatedRoute,
-              private router: Router,) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) { }
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.url)
-  };
-
-  loadsProducts(){  
-    console.log("products desde el servicio",this.products)
-    console.log("productsLocal desde el servicio",this.productsLocal)
-    this.getProducts().subscribe(products => {
-    this.products = products;
-    this.saveLocalProducts()
-    });
-    this.productsLocal = this.getLocalProducts();
-    this.productsUpdated.next([...this.products]);
+    return this.http.get<Product[]>(this.url);
   }
 
-  restart(){
-     this.loadsProducts();
-     this.productsUpdated.next([...this.products]);
-     console.log('Restarting...');
-  
-};
+  loadsProducts() {
+    if (!this.productsLocal.length) { // Verificar si los datos ya se han cargado
+      this.getProducts().subscribe(products => {
+        this.productsLocal = products;
+        this.saveLocalProducts();
+        this.productsUpdated.next([...this.productsLocal]);
+      });
+    }
+  }
 
   getProductsUpdatedListener() {
-    return this.productsUpdated.asObservable(); // Observable para suscribirse a actualizaciones
+    return this.productsUpdated.asObservable(); 
   }
 
   getLocalProducts(): Product[] {
     const productsJson = localStorage.getItem(this.localStorageKey);
     return productsJson ? JSON.parse(productsJson) : [];
-  };
+  }
 
   getProductById(productId: number): Observable<Product | null> {
-    console.log("que llega??????   ",typeof productId)
-    const productsStr = localStorage.getItem('products');
-    const products: Product[] = productsStr ? JSON.parse(productsStr) : [];
-    const product = products.find(item => item.id == productId);
+    const product = this.productsLocal.find(item => item.id == productId);
     return of(product || null);
-  };
+  }
 
   saveLocalProducts() {
-    localStorage.setItem('products', JSON.stringify(this.products));
+    localStorage.setItem(this.localStorageKey, JSON.stringify(this.productsLocal));
   }
 
   saveProduct(product: Product): void {
@@ -69,64 +57,60 @@ export class ProductsService {
       const index = this.productsLocal.findIndex(p => p.id === product.id);
       if (index !== -1) {
         this.productsLocal[index] = { ...product };
-        localStorage.setItem('products', JSON.stringify(this.productsLocal));
-        this.products = this.productsLocal;
+        this.saveLocalProducts();
+        this.productsUpdated.next([...this.productsLocal]);
+        this.navigateToProducts();
         alert(`${product.title} ha sido actualizado`);
-        console.log("products desde el servicio save 1",this.products)
       }
     } else {
-      product.id = this.productsLocal.length + 1;
+      let newId = this.generateUniqueId();
+      while (this.productsLocal.some(p => p.id === newId)) {
+        newId = this.generateUniqueId();
+      }
+      product.id = newId;
       this.productsLocal.push({ ...product });
-      localStorage.setItem('products', JSON.stringify(this.productsLocal));
-      this.products = this.productsLocal;
+      this.saveLocalProducts();
+      this.productsUpdated.next([...this.productsLocal]);
+      this.navigateToProducts();
       alert('Producto guardado exitosamente');
-      console.log("products desde el servicio save 2",this.products)
     }
   }
 
+  private generateUniqueId(): number {
+    const maxId = this.productsLocal.length > 0 ? Math.max(...this.productsLocal.map(p => p.id || 0)) : 0;
+    return maxId + 1;
+  }
+
   deleteProduct(productToDelete: Product) {
-    // Mostrar el cuadro de diálogo de confirmación
     const isConfirmed = window.confirm(`¿Está seguro de querer eliminar el producto "${productToDelete.title}"?`);
-
-    // Verificar si el usuario confirmó la eliminación
     if (isConfirmed) {
-        // Encuentra el índice del producto a eliminar en productsLocal
-        const index = this.productsLocal.findIndex(product => product.id === productToDelete.id);
-        console.log('este es el index',index);
-        // Verifica si se encontró el producto
-        if (index !== -1) {
-            // Elimina el producto del array productsLocal
-            this.productsLocal.splice(index, 1);
-            // Actualiza el localStorage con los productos actualizados
-            localStorage.setItem('products', JSON.stringify(this.productsLocal));
-            // Actualiza la lista de productos
-            this.products = this.productsLocal;
-            console.log("products desde el servicio delete",this.products)
-            
-        } else {
-            alert('Product not found!');
-        }
+      const index = this.productsLocal.findIndex(product => product.id === productToDelete.id);
+      if (index !== -1) {
+        this.productsLocal.splice(index, 1);
+        this.saveLocalProducts();
+        this.productsUpdated.next([...this.productsLocal]);
+      } else {
+        alert('Product not found!');
+      }
     } else {
-        // Si el usuario cancela, no se realiza ninguna acción
-        alert('Product deletion canceled!');
+      alert('Product deletion canceled!');
     }
-}
+  }
 
-showUpdateForm(product: Product) {
-  this.showForm = true;
-  this.selectedProduct = { ...product }; 
-  console.log(this.showForm);
-  // Copia el producto seleccionado para actualizarlo
-}
-navigateToProducts() {
-  this.router.navigate(['/products']);
-}
+  navigateToProducts() {
+    this.router.navigate(['/products']);
+  }
 
-navigateToProductDetail() {
-  this.router.navigate(['/product-detail']);
-}
+  navigateToProductDetail() {
+    this.router.navigate(['/product-detail']);
+  }
 
-navigateToFormProduct() {
-  this.router.navigate(['/form-product']);
-}
+  navigateToFormProduct() {
+    this.router.navigate(['/form-product']);
+  }
+
+  resetDataFromEndpoint(): void {
+    this.dataLoaded = false; // Marcar como no cargada la data
+    this.loadsProducts(); // Cargar productos desde el endpoint
+  }
 }

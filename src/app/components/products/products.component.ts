@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
-import { Product } from '../../models/product';
-import { MaterialModule } from '../../material';
-import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Product } from '../../models/product';
+import { Subscription } from 'rxjs';
 import { fadeInOut, transformacionAnimacion } from '../../animations/animations';
+import { MaterialModule } from '../../material'; // Importación de MaterialModule
 
 @Component({
   selector: 'app-products',
@@ -12,26 +12,40 @@ import { fadeInOut, transformacionAnimacion } from '../../animations/animations'
   styleUrls: ['./products.component.css'],
   animations: [fadeInOut, transformacionAnimacion]
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
 
-  products: Product[] = []; // Lista de productos obtenidos del localStorage
+  products: Product[] = [];
   productsSubscription!: Subscription;
   selectedProduct: Product | null = null;
-  constructor(private productsService: ProductsService,
-              private router: Router) { }
+  dataLoaded: boolean = false; // Bandera para controlar si los datos ya se han cargado
+
+  constructor(
+    private productsService: ProductsService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    console.log("products desde el componente",this.products)
+    if (!this.dataLoaded) { // Verificar si los datos ya han sido cargados
+      this.loadData();
+    } else {
+      this.products = this.productsService.getLocalProducts(); // Obtener los productos del localStorage
+    }
+  }
+
+  loadData() {
     this.productsService.loadsProducts();
     this.products = this.productsService.getLocalProducts();
     this.productsSubscription = this.productsService.getProductsUpdatedListener()
       .subscribe((updatedProducts: Product[]) => {
         this.products = updatedProducts;
+        this.dataLoaded = true; // Establecer la bandera en true cuando los datos se carguen
       });
   }
   
   ngOnDestroy() {
-    this.productsSubscription.unsubscribe();
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();
+    }
   }
 
   deleteProduct(productToDelete: Product) {
@@ -41,11 +55,13 @@ export class ProductsComponent implements OnInit {
   
   navigateToFormProduct() {
     this.router.navigate(['/form-product']);
-  }  navegate(id: number): void {
+  }
+
+  navigate(id: number): void {
     this.router.navigate(['/products', id]);
   }
 
-  togglehide(product: Product){    
+  toggleHide(product: Product) {    
     this.selectedProduct = this.selectedProduct === product ? null : product;
   }
 }
