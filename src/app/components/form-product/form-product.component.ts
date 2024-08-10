@@ -19,7 +19,7 @@ export class FormProductComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    // private router: Router,
     private productService: ProductsService,
     private formBuilder: FormBuilder // Agregar FormBuilder al constructor
   ) {
@@ -53,8 +53,8 @@ export class FormProductComponent implements OnInit {
     if (this.productForm.valid) { // Verificar si el formulario es válido
       const productData = this.productForm.value; // Obtener los datos del formulario
       this.productService.saveProduct(productData);
-      this.clearForm();
-      this.navigateToProducts();
+      //this.clearForm();
+      //this.navigateToProducts();
     } else {
       alert('Por favor complete el formulario correctamente.'); // Mostrar alerta si el formulario no es válido
     }

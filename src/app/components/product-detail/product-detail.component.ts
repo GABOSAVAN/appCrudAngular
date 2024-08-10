@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/models/product';
 import { ProductsService } from 'src/app/services/products.service';
 import { transformacionAnimacion } from '../../animations/animations';
-import { MaterialModule } from 'src/app/material'; // Importación de MaterialModule
+// import { MaterialModule } from 'src/app/material'; // Importación de MaterialModule
 
 @Component({
   selector: 'app-product-detail',

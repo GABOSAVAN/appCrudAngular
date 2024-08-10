@@ -12,8 +12,8 @@ export class AppComponent {
   constructor(public productsService: ProductsService, private router: Router,) { }
 
   restart(){
-    //this.productsService.restart();
-    console.log('reestableciendo data....');
+    this.productsService.restart();
+    //console.log('reestableciendo data....');
   }
 
   navigateToFormProduct() {
